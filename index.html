@@ -343,8 +343,8 @@ footer a{color:#c8cbd2;text-decoration:underline;text-decoration-color:var(--lin
 </main>
 
 <script>
-addEventListener("load",()=>setTimeout(()=>document.body.classList.add("ready"),650));
-setTimeout(()=>document.body.classList.add("ready"),2500);
+document.fonts.ready.then(()=>setTimeout(()=>document.body.classList.add("ready"),700));
+setTimeout(()=>document.body.classList.add("ready"),1800);
 // video
 const v=document.getElementById("vid"),pl=document.getElementById("play");
 pl.onclick=()=>v.play();
