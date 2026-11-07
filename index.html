@@ -3,222 +3,335 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InputFREE — Ta souris et ton clavier deviennent une manette</title>
-<meta name="description" content="InputFREE transforme ta souris et ton clavier en manette Xbox 360 sur Windows. Binds en un clic, souris vers stick réglable, gratuit.">
-<meta property="og:title" content="InputFREE">
-<meta property="og:description" content="Ta souris et ton clavier deviennent une manette Xbox. Gratuit.">
-<meta property="og:image" content="poster.jpg">
-<meta name="theme-color" content="#0b0c10">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ffcf5c'/%3E%3Cpath d='M9 13h4v-3h3v3h4v3h-4v3h-3v-3H9z' fill='%2315171f'/%3E%3Ccircle cx='23' cy='17' r='2.2' fill='%2315171f'/%3E%3C/svg%3E">
+<title>InputFREE — Clavier et souris en manette</title>
+<meta name="description" content="InputFREE transforme ton clavier et ta souris en manette Xbox 360 sur Windows. Binds en un clic, visée à la souris réglable. Gratuit.">
+<meta property="og:title" content="InputFREE — Clavier et souris en manette">
+<meta property="og:description" content="Ton clavier et ta souris deviennent une manette Xbox. Gratuit, pour Windows.">
+<meta property="og:image" content="https://yutsioff.github.io/InputFREE/img/app-pad.jpg">
+<meta name="theme-color" content="#111214">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111214'/%3E%3Cpath d='M8 9h16a6 6 0 0 1 6 6v3a4 4 0 0 1-7.2 2.4L21 18H11l-1.8 2.4A4 4 0 0 1 2 18v-3a6 6 0 0 1 6-6z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0c10;--bg2:#111319;--card:#151820;--line:#232735;--text:#f2f3f7;--mute:#9098ab;--acc:#ffcf5c;--acc2:#ff9f1c;--blue:#5fb3ff;--r:18px}
+:root{
+  --bg:#111214;--bg2:#15161a;--line:#25272d;--line2:#2f323a;--text:#ececee;--mute:#8d9099;--dim:#5c5f68;
+  --blue:#3b82f6;--orange:#f97316;--purple:#a855f7;--green:#22c55e;--yellow:#facc15;--pink:#ec4899;--brand:#ffcf5c;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;--disp:"Archivo","Segoe UI",system-ui,sans-serif;--serif:"Instrument Serif",Georgia,serif;
+  --W:1240px;
+}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Inter","Segoe UI Variable","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;scroll-padding-top:52px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--disp);font-stretch:100%;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
-/* background */
-.bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(900px 520px at 78% -8%,rgba(255,207,92,.16),transparent 60%),radial-gradient(800px 600px at -10% 20%,rgba(95,179,255,.10),transparent 60%),var(--bg)}
-.bgfx:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%)}
-/* nav */
-nav{position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);background:rgba(11,12,16,.7);border-bottom:1px solid rgba(255,255,255,.06)}
-nav .wrap{display:flex;align-items:center;gap:28px;height:68px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.2px}
-.logo i{width:32px;height:32px;border-radius:9px;background:var(--acc);display:grid;place-items:center;box-shadow:0 0 24px rgba(255,207,92,.35)}
-.logo b{color:var(--acc)}
-.links{display:flex;gap:26px;color:var(--mute);font-size:14px;font-weight:500}
-.links a:hover{color:var(--text)}
-.grow{flex:1}
-.btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:12px 20px;font-weight:700;font-size:15px;transition:transform .15s,box-shadow .15s,background .15s;border:1px solid transparent;cursor:pointer}
-.btn-acc{background:linear-gradient(180deg,#ffd978,var(--acc));color:#1c1606;box-shadow:0 10px 30px -10px rgba(255,207,92,.7),inset 0 1px 0 rgba(255,255,255,.5)}
-.btn-acc:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(255,207,92,.8),inset 0 1px 0 rgba(255,255,255,.5)}
-.btn-ghost{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--text)}
-.btn-ghost:hover{background:rgba(255,255,255,.07)}
-.btn-sm{padding:9px 16px;font-size:14px}
+img{display:block;max-width:100%;height:auto}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;transition:opacity .6s ease .1s,visibility .6s ease .1s}
+#loader svg{width:70px;opacity:0;transform:scale(.9);animation:lg 1s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes lg{60%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+body.ready #loader{opacity:0;visibility:hidden}
+
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;background:rgba(17,18,20,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:stretch}
+header .cell{display:flex;align-items:center;padding:0 18px;border-right:1px solid var(--line)}
+header .logo{width:64px;justify-content:center;padding:0}
+header nav{display:flex;align-items:center;gap:6px;padding:0 14px}
+header nav a{padding:5px 9px;color:var(--mute);transition:color .15s}
+header nav a:hover{color:var(--text)}
+header nav a.on{background:var(--text);color:var(--bg)}
+header .grow{flex:1;border-right:1px solid var(--line)}
+header .ver{color:var(--mute)}
+header .dl{background:var(--text);color:var(--bg);padding:0 22px;font-weight:700;border-right:0;transition:background .15s}
+header .dl:hover{background:#fff}
+
+/* ---------- frame & rail ---------- */
+.frame{max-width:var(--W);margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line);position:relative}
+.rail{position:fixed;top:52px;bottom:0;right:0;width:calc((100vw - var(--W))/2);min-width:0;pointer-events:none;z-index:5;overflow:hidden}
+.ruler{position:absolute;right:0;top:0;bottom:0;width:18px;background:repeating-linear-gradient(to bottom,var(--line2) 0 1px,transparent 1px 12px);opacity:.8}
+.ruler:after{content:"";position:absolute;right:0;top:0;bottom:0;width:6px;background:repeating-linear-gradient(to bottom,var(--dim) 0 1px,transparent 1px 60px)}
+.marker{position:absolute;right:0;width:34px;height:2px;background:var(--brand);box-shadow:0 0 12px var(--brand);top:0;transition:top .1s linear}
+.marker span{position:absolute;right:38px;top:-7px;font:10px var(--mono);color:var(--brand);letter-spacing:1px}
+.secname{position:absolute;right:40px;bottom:150px;writing-mode:vertical-rl;transform:rotate(180deg);font:800 30px/1 var(--disp);font-stretch:118%;letter-spacing:1px;text-transform:uppercase;color:var(--dim);transition:color .3s}
+.seclist{position:absolute;right:36px;bottom:24px;text-align:right;font:700 13px/1.25 var(--disp);font-stretch:115%;text-transform:uppercase;color:var(--dim)}
+.seclist div{transition:color .2s}.seclist div.on{color:var(--text)}
+@media (max-width:1440px){.rail{display:none}}
+
+/* ---------- sections ---------- */
+section{border-bottom:1px solid var(--line)}
+.shead{display:flex;justify-content:space-between;align-items:center;padding:14px 32px;border-bottom:1px solid var(--line);color:var(--mute)}
+.shead b{color:var(--text);font-weight:500}
+.pad{padding:56px 32px}
+.cross{position:absolute;width:11px;height:11px;pointer-events:none}
+.cross:before,.cross:after{content:"";position:absolute;background:var(--dim)}
+.cross:before{left:5px;top:0;bottom:0;width:1px}.cross:after{top:5px;left:0;right:0;height:1px}
+
 /* hero */
-.hero{padding:88px 0 40px;text-align:center}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,207,92,.3);background:rgba(255,207,92,.08);color:var(--acc);font-size:13px;font-weight:600}
-.badge i{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
-h1{font-size:clamp(40px,6.4vw,78px);line-height:1.02;letter-spacing:-2.5px;margin:22px auto 18px;max-width:900px;font-weight:800}
-h1 span{background:linear-gradient(120deg,#ffe29a 0%,var(--acc) 40%,var(--acc2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--mute);font-size:clamp(17px,2vw,20px);max-width:640px;margin:0 auto 34px}
-.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.cta .btn-acc{padding:17px 30px;font-size:17px;border-radius:14px}
-.meta{margin-top:16px;color:var(--mute);font-size:13px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.meta span:before{content:"✓ ";color:var(--acc)}
+.hero{display:grid;grid-template-columns:1.02fr 1fr;min-height:calc(100vh - 52px - 44px)}
+.hero .l{padding:64px 40px 48px 32px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--line)}
+h1{font:800 clamp(46px,6vw,86px)/.95 var(--disp);font-stretch:118%;letter-spacing:-1.5px;margin:0 0 26px}
+h1 .c{color:var(--brand)}
+h1 em,h2 em{font-family:var(--serif);font-weight:400;font-style:italic;font-stretch:100%;letter-spacing:0}
+.lede{color:#b9bcc4;font-size:18px;line-height:1.65;max-width:560px;margin:0 0 30px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border:1px solid var(--line2);font:700 11.5px var(--mono);letter-spacing:1.4px;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s;cursor:pointer;background:transparent;color:var(--text)}
+.btn:hover{border-color:#4a4e58;background:#1a1b1f}
+.btn.w{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn.w:hover{background:#fff}
+.btn svg{width:16px;height:16px}
+.under{margin-top:14px;color:var(--dim)}
+.under a{color:var(--mute);text-decoration:underline;text-decoration-color:var(--line2);font-family:var(--disp);text-transform:none;letter-spacing:0;font-size:13px}
+.rec{margin:26px 0 22px;color:var(--mute);font-size:15px;max-width:560px}
+.rec b{color:var(--text)}
+.share{display:inline-flex;border:1px solid var(--line2);align-self:flex-start}
+.share>*{padding:9px 13px;border-right:1px solid var(--line2);color:var(--mute);font:10.5px var(--mono);letter-spacing:1.3px;text-transform:uppercase;background:none;border-top:0;border-bottom:0;border-left:0;cursor:pointer}
+.share>*:last-child{border-right:0}
+.share>a:hover,.share button:hover{color:var(--text);background:#1a1b1f}
+.hero .r{position:relative;display:flex;align-items:center;justify-content:center;padding:40px;background:radial-gradient(60% 50% at 50% 50%,rgba(255,207,92,.08),transparent 70%)}
+.shot{position:relative;width:100%;border:1px solid var(--line2);box-shadow:0 40px 100px -30px rgba(0,0,0,.9);transform:perspective(1400px) rotateY(-6deg) rotateX(2deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.shot:hover{transform:perspective(1400px) rotateY(0) rotateX(0)}
+.shot img{width:100%}
+.shot .tag{position:absolute;left:-1px;top:-28px;background:var(--brand);color:#1b1607;padding:4px 9px;font:700 10px var(--mono);letter-spacing:1.2px}
+
 /* video */
-.video{margin:56px auto 0;max-width:1040px;position:relative}
-.video:before{content:"";position:absolute;inset:-2px;border-radius:24px;background:linear-gradient(140deg,rgba(255,207,92,.6),rgba(255,255,255,.05) 35%,rgba(95,179,255,.4));z-index:-1;filter:blur(.5px)}
-.video .frame{border-radius:22px;overflow:hidden;background:#000;box-shadow:0 40px 120px -30px rgba(0,0,0,.9),0 0 80px -20px rgba(255,207,92,.25)}
-.video video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
-.play{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;transition:opacity .2s}
-.play b{width:92px;height:92px;border-radius:50%;background:rgba(255,207,92,.95);display:grid;place-items:center;box-shadow:0 0 0 12px rgba(255,207,92,.18),0 20px 50px rgba(0,0,0,.5);transition:transform .2s}
-.play:hover b{transform:scale(1.06)}
+.vwrap{position:relative;margin:0 auto;border:1px solid var(--line2);background:#000}
+.vwrap video{width:100%;display:block;aspect-ratio:16/9}
+.play{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.5));transition:opacity .25s}
 .play.hide{opacity:0;pointer-events:none}
-/* sections */
-section{padding:110px 0 0}
-.eyebrow{color:var(--acc);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center}
-h2{font-size:clamp(30px,4vw,46px);letter-spacing:-1.2px;line-height:1.1;text-align:center;margin:12px 0 14px;font-weight:800}
-.lead{color:var(--mute);text-align:center;max-width:620px;margin:0 auto 50px;font-size:17px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:var(--r);padding:28px;transition:border-color .2s,transform .2s}
-.card:hover{border-color:rgba(255,207,92,.35);transform:translateY(-3px)}
-.ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:rgba(255,207,92,.1);border:1px solid rgba(255,207,92,.22);margin-bottom:18px}
-.card h3{margin:0 0 8px;font-size:18px;letter-spacing:-.2px}
-.card p{margin:0;color:var(--mute);font-size:15px}
-.big{grid-column:span 2;display:grid;grid-template-columns:1.1fr 1fr;gap:26px;align-items:center}
-.keys{display:flex;flex-direction:column;gap:10px}
-.krow{display:flex;align-items:center;gap:12px;color:var(--mute);font-size:14px}
-kbd{display:inline-grid;place-items:center;min-width:40px;height:38px;padding:0 10px;border-radius:9px;background:linear-gradient(180deg,#2a2f3d,#1b1f29);border:1px solid #343a4b;border-bottom-width:3px;color:var(--text);font:700 14px "Segoe UI",sans-serif}
-.arrow{color:var(--acc);font-weight:800}
-.pill{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;font-weight:800;font-size:15px}
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
-.step{position:relative;padding:30px;border-radius:var(--r);border:1px solid var(--line);background:var(--card)}
-.step:before{counter-increment:s;content:"0" counter(s);font:800 44px/1 "Segoe UI",sans-serif;color:transparent;-webkit-text-stroke:1.5px rgba(255,207,92,.6);display:block;margin-bottom:16px}
-.step h3{margin:0 0 6px}
-.step p{margin:0;color:var(--mute);font-size:15px}
-/* download band */
-.band{margin-top:110px;border-radius:28px;padding:64px 40px;text-align:center;position:relative;overflow:hidden;border:1px solid rgba(255,207,92,.25);
-  background:radial-gradient(600px 300px at 50% 0%,rgba(255,207,92,.18),transparent 70%),linear-gradient(180deg,#14161d,#0f1116)}
-.band h2{margin-top:0}
-.band .meta{margin-top:18px}
-.hash{margin-top:18px;font:12px Consolas,monospace;color:#6d7488;word-break:break-all}
+.play div{display:flex;align-items:center;gap:14px;background:var(--text);color:var(--bg);padding:16px 26px;font:700 12px var(--mono);letter-spacing:1.6px;text-transform:uppercase;transition:transform .2s}
+.play:hover div{transform:scale(1.04)}
+.vmeta{display:flex;justify-content:space-between;margin-top:14px;color:var(--dim)}
+
+/* features grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.cellf{border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;transition:background .2s}
+.cellf:nth-child(3n){border-right:0}
+.cellf:hover{background:#15161a}
+.cellf .top{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;color:var(--mute)}
+.num{display:inline-grid;place-items:center;height:22px;padding:0 7px;color:#fff;font:700 11px var(--mono)}
+.cellf .img{position:relative;aspect-ratio:16/10;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cellf .img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.cellf:hover .img img{transform:scale(1.04)}
+.cellf .ico{position:absolute;left:22px;bottom:-1px;width:58px;height:58px;display:grid;place-items:center;border:3px solid var(--bg);border-bottom:0;transform:translateY(50%);z-index:2}
+.cellf .ico svg{width:28px;height:28px}
+.cellf .body{padding:42px 22px 26px;display:flex;flex-direction:column;flex:1}
+.cellf h3{font:800 30px/1.05 var(--disp);font-stretch:112%;margin:0 0 12px;letter-spacing:-.4px}
+.cellf p{margin:0 0 18px;color:#a9acb5;font-size:15.5px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.tg{border:1px solid var(--line2);padding:3px 8px;font:500 10px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.more{display:flex;justify-content:space-between;align-items:center;padding:34px 32px}
+.more h3{margin:4px 0 6px;font:800 34px/1.1 var(--disp);font-stretch:112%}
+.more p{margin:0;color:var(--mute)}
+
+/* principles */
+.prin{display:grid;grid-template-columns:repeat(3,1fr)}
+.prin>div{padding:40px 32px 44px;border-right:1px solid var(--line)}
+.prin>div:last-child{border-right:0}
+.prin .n{font:800 64px/1 var(--disp);font-stretch:118%;color:transparent;-webkit-text-stroke:1px var(--line2);margin-bottom:22px}
+.prin h3{font:800 24px/1.15 var(--disp);font-stretch:110%;margin:0 0 10px}
+.prin p{margin:0;color:#a9acb5;font-size:15.5px}
+.prin kbd{font:700 12px var(--mono);border:1px solid var(--line2);border-bottom-width:3px;padding:1px 7px;color:var(--text)}
+
+/* start */
+.start{text-align:center;padding:90px 32px 80px;position:relative;background:radial-gradient(50% 60% at 50% 0%,rgba(255,207,92,.09),transparent 70%)}
+.eyebrow{color:var(--blue)}
+h2{font:800 clamp(38px,5vw,64px)/1 var(--disp);font-stretch:118%;letter-spacing:-1px;margin:16px 0 20px}
+.start .lede{margin:0 auto 34px;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -32px 44px;text-align:left}
+.steps>div{padding:26px 32px;border-right:1px solid var(--line)}
+.steps>div:last-child{border-right:0}
+.steps .mono{color:var(--brand)}
+.steps h4{margin:10px 0 6px;font:800 19px var(--disp);font-stretch:110%}
+.steps p{margin:0;color:var(--mute);font-size:14.5px}
+.start .btns{justify-content:center}
+.hash{margin-top:22px;color:var(--dim);word-break:break-all}
+
 /* faq */
-.faq{max-width:820px;margin:0 auto}
-details{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:10px;padding:0 22px}
-summary{cursor:pointer;list-style:none;padding:20px 0;font-weight:700;display:flex;align-items:center;gap:12px}
+.faq{display:grid;grid-template-columns:.8fr 1.2fr}
+.faq .l{padding:44px 32px;border-right:1px solid var(--line)}
+.faq h2{font-size:44px;margin-top:10px}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:22px 32px;font-weight:700;font-size:17px;display:flex;gap:16px;align-items:center}
 summary::-webkit-details-marker{display:none}
-summary:after{content:"+";margin-left:auto;color:var(--acc);font-size:22px;font-weight:400;transition:transform .2s}
+summary .mono{color:var(--dim);font-size:10.5px}
+summary:after{content:"+";margin-left:auto;font:400 22px var(--mono);color:var(--mute);transition:transform .2s}
 details[open] summary:after{transform:rotate(45deg)}
-details p,details ol{color:var(--mute);margin:0 0 20px;font-size:15px}
-footer{margin-top:110px;border-top:1px solid var(--line);padding:40px 0 60px;color:var(--mute);font-size:13px}
-footer .wrap{display:grid;grid-template-columns:1.2fr 2fr;gap:40px}
-footer a{color:#c9cede;text-decoration:underline;text-decoration-color:#3a4052}
+details p{margin:-6px 32px 24px 70px;color:#a9acb5;font-size:15.5px}
+details:last-child{border-bottom:0}
+
+/* footer */
+footer{display:grid;grid-template-columns:1fr 2fr;border-bottom:1px solid var(--line)}
+footer>div{padding:34px 32px;color:var(--mute);font-size:13.5px}
+footer>div:first-child{border-right:1px solid var(--line)}
+footer a{color:#c8cbd2;text-decoration:underline;text-decoration-color:var(--line2)}
+.fbrand{display:flex;align-items:center;gap:10px;font:800 20px var(--disp);font-stretch:115%;color:var(--text);margin-bottom:10px}
+.fbrand b{color:var(--brand)}
+
 /* reveal */
-.rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
 .rv.in{opacity:1;transform:none}
-@media (max-width:900px){.links{display:none}.grid,.steps{grid-template-columns:1fr}.grid .card{grid-column:auto!important}.big{grid-column:auto;grid-template-columns:1fr}footer .wrap{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:980px){
+  header nav,header .ver{display:none}
+  .hero,.faq,footer{grid-template-columns:1fr}.hero .l,.faq .l,footer>div:first-child{border-right:0;border-bottom:1px solid var(--line)}
+  .grid,.prin,.steps{grid-template-columns:1fr}.cellf{border-right:0}.prin>div,.steps>div{border-right:0;border-bottom:1px solid var(--line)}
+  .shot{transform:none}.more{flex-direction:column;align-items:flex-start;gap:18px}
+  .shead>span:last-child{display:none}.share{flex-wrap:wrap}.share>*{border-bottom:1px solid var(--line2)}
+  .hero .l{padding:44px 22px}.pad,.shead,.more{padding-left:22px;padding-right:22px}
+}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}#loader{display:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<div class="bgfx"></div>
+<div id="loader"><svg viewBox="0 0 64 40" fill="#ececee"><path d="M14 2h36a12 12 0 0 1 12 12v8a10 10 0 0 1-18 6l-4-5H24l-4 5A10 10 0 0 1 2 22v-8A12 12 0 0 1 14 2zm1 9v4h-4v4h4v4h4v-4h4v-4h-4v-4zm30 1a2.6 2.6 0 1 0 0 5.2A2.6 2.6 0 0 0 45 12zm-5 5a2.6 2.6 0 1 0 0 5.2A2.6 2.6 0 0 0 40 17z"/></svg></div>
 
-<nav><div class="wrap">
-  <a class="logo" href="#"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="#15171f"><path d="M7 6h10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.3 2.1L14.3 15H9.7l-1.4 1.6A3.5 3.5 0 0 1 2 14.5V11a5 5 0 0 1 5-5zm0 3.5V11H5.5v1.5H7V14h1.5v-1.5H10V11H8.5V9.5zm9.5.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 2.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></i>Input<b>FREE</b></a>
-  <div class="links"><a href="#video">Présentation</a><a href="#features">Fonctionnalités</a><a href="#how">Comment ça marche</a><a href="#faq">FAQ</a></div>
+<header>
+  <a class="cell logo" href="#top" aria-label="InputFREE"><svg viewBox="0 0 64 40" width="30" fill="#ececee"><path d="M14 2h36a12 12 0 0 1 12 12v8a10 10 0 0 1-18 6l-4-5H24l-4 5A10 10 0 0 1 2 22v-8A12 12 0 0 1 14 2zm1 9v4h-4v4h4v4h4v-4h4v-4h-4v-4zm30 1a2.6 2.6 0 1 0 0 5.2A2.6 2.6 0 0 0 45 12zm-5 5a2.6 2.6 0 1 0 0 5.2A2.6 2.6 0 0 0 40 17z"/></svg></a>
+  <nav class="mono" id="nav"><a href="#top" data-s="top" class="on">Accueil</a><a href="#video" data-s="video">Présentation</a><a href="#features" data-s="features">Fonctionnalités</a><a href="#start" data-s="start">Démarrer</a><a href="#faq" data-s="faq">FAQ</a></nav>
   <div class="grow"></div>
-  <a class="btn btn-acc btn-sm" href="InputFREE.exe" download="InputFREE.exe">Télécharger</a>
-</div></nav>
+  <div class="cell ver mono">v1.2.1 · Windows</div>
+  <a class="cell dl mono" href="InputFREE.exe" download="InputFREE.exe">Télécharger</a>
+</header>
 
-<header class="hero"><div class="wrap">
-  <div class="badge rv"><i></i>Gratuit · Windows 10 &amp; 11</div>
-  <h1 class="rv">Ta souris et ton clavier<br><span>deviennent une manette.</span></h1>
-  <p class="sub rv">InputFREE transforme ton clavier et ta souris en manette Xbox 360 que tes jeux reconnaissent instantanément. Binds en un clic, visée à la souris réglable au millimètre.</p>
-  <div class="cta rv">
-    <a class="btn btn-acc" href="InputFREE.exe" download="InputFREE.exe">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-      Télécharger InputFREE</a>
-    <a class="btn btn-ghost" href="#video">▶ Voir la vidéo</a>
+<div class="rail" aria-hidden="true">
+  <div class="ruler"></div>
+  <div class="marker" id="marker"><span id="pct">00</span></div>
+  <div class="secname" id="secname">InputFREE</div>
+  <div class="seclist" id="seclist"></div>
+</div>
+
+<main class="frame" style="margin-top:52px">
+
+<!-- 01 -->
+<section id="top" data-name="InputFREE">
+  <div class="shead mono"><span>01 / <b>InputFREE</b></span><span>Gratuit · Sans compte · Windows 10 &amp; 11</span></div>
+  <div class="hero">
+    <div class="l">
+      <h1 class="rv">Clavier.<br>Souris.<br><span class="c">Manette</span><em>.</em></h1>
+      <p class="lede rv">InputFREE transforme ton clavier et ta souris en manette Xbox 360 que tes jeux reconnaissent instantanément. Binds en un clic, visée à la souris réglable au millimètre.</p>
+      <div class="btns rv">
+        <a class="btn w" href="InputFREE.exe" download="InputFREE.exe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>Télécharger InputFREE</a>
+        <a class="btn" href="#video"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>Voir la vidéo</a>
+      </div>
+      <div class="under mono rv">Pour Windows · 64 bits · 26 Mo · v1.2.1</div>
+      <p class="rec rv"><b>Tout est inclus :</b> les pilotes de la manette virtuelle, de la souris/clavier virtuels et du partage USB s'installent en un clic depuis le logiciel.</p>
+      <div class="share rv"><span>Partager</span><button id="copy">⧉ Copier le lien</button><a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=InputFREE%20%E2%80%94%20clavier%20et%20souris%20en%20manette&url=https%3A%2F%2Fyutsioff.github.io%2FInputFREE%2F">X</a><a target="_blank" rel="noopener" href="https://www.reddit.com/submit?url=https%3A%2F%2Fyutsioff.github.io%2FInputFREE%2F&title=InputFREE">Reddit</a></div>
+    </div>
+    <div class="r">
+      <span class="cross" style="left:-6px;top:-6px"></span><span class="cross" style="right:-6px;bottom:-6px"></span>
+      <div class="shot rv"><span class="tag">EN DIRECT</span><img src="img/app-pad.jpg" alt="Interface d'InputFREE : manette animée en direct" width="1440" height="900"></div>
+    </div>
   </div>
-  <div class="meta rv"><span>Version 1.2.1</span><span>26 Mo</span><span>Windows 64 bits</span><span>Pilotes inclus</span></div>
+</section>
 
-  <div class="video rv" id="video">
-    <div class="frame">
+<!-- 02 -->
+<section id="video" data-name="Présentation">
+  <div class="shead mono"><span>02 / <b>Présentation</b></span><span>0:45 · 1080p</span></div>
+  <div class="pad">
+    <div class="vwrap rv">
+      <span class="cross" style="left:-6px;top:-6px"></span><span class="cross" style="right:-6px;top:-6px"></span><span class="cross" style="left:-6px;bottom:-6px"></span><span class="cross" style="right:-6px;bottom:-6px"></span>
       <video id="vid" src="presentation.mp4" poster="poster.jpg" preload="metadata" playsinline controls></video>
+      <div class="play" id="play"><div><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4v16l14-8z"/></svg>Lancer la vidéo</div></div>
     </div>
-    <div class="play" id="play"><b><svg width="34" height="34" viewBox="0 0 24 24" fill="#1c1606"><path d="M8 5.5v13l11-6.5z"/></svg></b></div>
+    <div class="vmeta mono"><span>InputFREE en jeu</span><span>Clavier + souris → manette</span></div>
   </div>
-</div></header>
+</section>
 
-<section id="features"><div class="wrap">
-  <div class="eyebrow rv">Fonctionnalités</div>
-  <h2 class="rv">Tout ce qu'il faut, rien de trop.</h2>
-  <p class="lead rv">Pensé pour jouer au clavier/souris dans les jeux qui ne jurent que par la manette.</p>
+<!-- 03 -->
+<section id="features" data-name="Fonctionnalités">
+  <div class="shead mono"><span>03 / <b>Fonctionnalités</b></span><span>Tout ce qu'il faut, rien de trop</span></div>
   <div class="grid">
-    <div class="card big rv">
-      <div>
-        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></div>
-        <h3>Binds en un clic</h3>
-        <p>Clique sur un bouton de la manette, appuie sur ta touche : c'est bindé. Jusqu'à 4 touches par bouton, clavier AZERTY reconnu, boutons de souris et molette compris.</p>
-      </div>
-      <div class="keys">
-        <div class="krow"><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd><span class="arrow">→</span>Stick gauche</div>
-        <div class="krow"><kbd style="min-width:120px">Espace</kbd><span class="arrow">→</span><span class="pill" style="background:#173d22;color:#7ee08a">A</span></div>
-        <div class="krow"><kbd>Clic droit</kbd><span class="arrow">→</span><kbd>LT</kbd> viser</div>
-        <div class="krow"><kbd>Clic gauche</kbd><span class="arrow">→</span><kbd>RT</kbd> tirer</div>
-      </div>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:var(--blue)">01</span><span>Binds</span></div>
+      <div class="img"><img src="img/app-binds.jpg" alt="" loading="lazy"><div class="ico" style="background:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="20" height="12"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 14h10"/></svg></div></div>
+      <div class="body"><h3>Binds <span style="color:var(--blue)">en un clic</span></h3><p>Clique un bouton de la manette, appuie sur ta touche : c'est bindé. Jusqu'à 4 touches par bouton.</p>
+      <div class="tags"><span class="tg" style="color:var(--blue);border-color:#1e3a6b">AZERTY</span><span class="tg">Souris</span><span class="tg">Molette</span><span class="tg">Profils</span></div></div>
+    </article>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:var(--orange)">02</span><span>Visée</span></div>
+      <div class="img"><img src="img/app-mouse.jpg" alt="" loading="lazy"><div class="ico" style="background:var(--orange)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></svg></div></div>
+      <div class="body"><h3>Souris <span style="color:var(--orange)">→ stick</span></h3><p>Sensibilité, anti-zone morte, courbe et lissage : une visée fluide qui passe la zone morte du jeu.</p>
+      <div class="tags"><span class="tg" style="color:var(--orange);border-color:#6b3514">Sensibilité X/Y</span><span class="tg">Courbe</span><span class="tg">Lissage</span></div></div>
+    </article>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:var(--purple)">03</span><span>Mode USB</span></div>
+      <div class="img"><img src="img/frame-20.jpg" alt="" loading="lazy"><div class="ico" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v14M8 7l4-4 4 4M7 13h10v3a5 5 0 0 1-10 0z"/></svg></div></div>
+      <div class="body"><h3>Que la <span style="color:var(--purple)">manette</span></h3><p>En mode USB, clavier et souris passent par un mini Linux isolé : le jeu ne voit que la manette, fini les icônes qui clignotent.</p>
+      <div class="tags"><span class="tg" style="color:var(--purple);border-color:#4b2470">usbipd</span><span class="tg">WSL 2</span><span class="tg">FakerInput</span></div></div>
+    </article>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:var(--green)">04</span><span>Sécurité</span></div>
+      <div class="img"><img src="img/frame-14.jpg" alt="" loading="lazy"><div class="ico" style="background:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div></div>
+      <div class="body"><h3>Toujours <span style="color:var(--green)">récupérable</span></h3><p>F12 rend tout à Windows instantanément. Si le logiciel plante, souris et clavier reviennent seuls en moins de 3 secondes.</p>
+      <div class="tags"><span class="tg" style="color:var(--green);border-color:#165c33">F12</span><span class="tg">Auto-récupération</span></div></div>
+    </article>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:#a16207">05</span><span>Pause</span></div>
+      <div class="img"><img src="img/frame-43.jpg" alt="" loading="lazy"><div class="ico" style="background:#a16207"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg></div></div>
+      <div class="body"><h3>Pause <span style="color:var(--yellow)">en une touche</span></h3><p>F10 par défaut, ou la touche que tu veux, même un bouton de souris : la manette se met en pause, Windows redevient normal.</p>
+      <div class="tags"><span class="tg" style="color:var(--yellow);border-color:#6b5a14">Personnalisable</span><span class="tg">Instantané</span></div></div>
+    </article>
+    <article class="cellf rv">
+      <div class="top mono"><span class="num" style="background:var(--pink)">06</span><span>Profils</span></div>
+      <div class="img"><img src="img/frame-32.jpg" alt="" loading="lazy"><div class="ico" style="background:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="#ec4899"/><circle cx="15" cy="12" r="2" fill="#ec4899"/><circle cx="10" cy="17" r="2" fill="#ec4899"/></svg></div></div>
+      <div class="body"><h3>Un profil <span style="color:var(--pink)">par jeu</span></h3><p>Chaque jeu a ses binds et ses réglages de visée. Tout est enregistré automatiquement.</p>
+      <div class="tags"><span class="tg" style="color:var(--pink);border-color:#6b1d45">Sauvegarde auto</span><span class="tg">Illimité</span></div></div>
+    </article>
+  </div>
+  <div class="more rv">
+    <div><div class="mono" style="color:var(--dim)">À venir</div><h3>D'autres fonctions <em style="font-family:var(--serif);font-weight:400;color:var(--brand)">en route</em>.</h3><p>Dis-nous ce que tu veux voir dans la prochaine version.</p></div>
+    <a class="btn w" href="https://github.com/YutsiOFF/InputFREE/issues" target="_blank" rel="noopener">Proposer une idée ↗</a>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="principles" data-name="Principes">
+  <div class="shead mono"><span>04 / <b>Principes</b></span><span>Ce qui compte pour nous</span></div>
+  <div class="prin">
+    <div class="rv"><div class="n">01</div><h3>Ta souris reste à toi</h3><p>Première capture confirmée par un clic, <kbd>F12</kbd> à tout moment, retour automatique en cas de souci. Tu ne perds jamais le contrôle.</p></div>
+    <div class="rv"><div class="n">02</div><h3>Gratuit, vraiment</h3><p>Pas de compte, pas d'essai, pas d'abonnement. Tu télécharges, tu joues.</p></div>
+    <div class="rv"><div class="n">03</div><h3>Simple avant tout</h3><p>Une seule fenêtre en français, une manette animée en direct, des binds qui se font en un clic.</p></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="start" data-name="Démarrer">
+  <div class="shead mono"><span>05 / <b>Démarrer</b></span><span>Prêt en 3 minutes</span></div>
+  <div class="start">
+    <div class="eyebrow mono rv">Gratuit · Sans compte</div>
+    <h2 class="rv">Prêt à jouer <em>en trois étapes</em>.</h2>
+    <p class="lede rv">Télécharge, installe les composants en un clic, et appuie sur F10 dans ton jeu.</p>
+    <div class="steps">
+      <div class="rv"><span class="mono">Étape 01</span><h4>Télécharge et lance</h4><p>Un seul fichier. Accepte la demande administrateur de Windows.</p></div>
+      <div class="rv"><span class="mono">Étape 02</span><h4>Installe les composants</h4><p>Onglet Installation → « Installer ». Redémarre si demandé, puis coche ta souris et ton clavier.</p></div>
+      <div class="rv"><span class="mono">Étape 03</span><h4>Appuie sur F10</h4><p>Lance ton jeu, active la manette et joue. F12 rend tout à Windows.</p></div>
     </div>
-    <div class="card rv">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></svg></div>
-      <h3>Souris → stick droit</h3>
-      <p>Sensibilité, anti-zone morte, courbe et lissage : une visée fluide qui passe la zone morte du jeu.</p>
+    <div class="btns rv">
+      <a class="btn w" href="InputFREE.exe" download="InputFREE.exe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>Télécharger pour Windows</a>
+      <a class="btn" href="#faq">Lire la FAQ</a>
     </div>
-    <div class="card rv">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
-      <h3>Le jeu ne voit que la manette</h3>
-      <p>En mode USB, ta souris et ton clavier passent par un mini Linux isolé : fini les icônes qui clignotent entre clavier et manette.</p>
-    </div>
-    <div class="card rv">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg></div>
-      <h3>Toujours récupérable</h3>
-      <p><b style="color:var(--text)">F12</b> rend tout à Windows instantanément. Et si le logiciel plante, souris et clavier reviennent seuls en moins de 3 secondes.</p>
-    </div>
-    <div class="card rv">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-      <h3>Pause en une touche</h3>
-      <p>Une touche (F10 par défaut, ou celle que tu veux) met la manette en pause pour discuter ou changer de fenêtre.</p>
-    </div>
-    <div class="card rv" style="grid-column:span 2">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/><circle cx="8" cy="7" r="2" fill="#15171f"/><circle cx="16" cy="12" r="2" fill="#15171f"/><circle cx="10" cy="17" r="2" fill="#15171f"/></svg></div>
-      <h3>Profils par jeu</h3>
-      <p>Un profil par jeu, avec ses binds et ses réglages. Tout est sauvegardé automatiquement.</p>
-    </div>
-    <div class="card rv">
-      <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffcf5c" stroke-width="2" stroke-linecap="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></div>
-      <h3>Pilotes inclus</h3>
-      <p>Manette virtuelle, souris/clavier virtuels, partage USB : tout s'installe en un clic, versions officielles vérifiées.</p>
+    <div class="under mono rv">Windows 10/11 64 bits · Virtualisation activée pour le mode USB</div>
+    <div class="hash mono rv">SHA-256 · d8a8cba1f9cb7526a8ec5b7a13b376154999b2f69091eb4ef5b0b4bf4ec6fed5</div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="faq" data-name="FAQ">
+  <div class="shead mono"><span>06 / <b>FAQ</b></span><span>Questions fréquentes</span></div>
+  <div class="faq">
+    <div class="l"><div class="mono" style="color:var(--dim)">Besoin d'aide ?</div><h2 class="rv">Les réponses <em>rapides</em>.</h2><p style="color:var(--mute)">Une autre question ? <a href="https://github.com/YutsiOFF/InputFREE/issues" target="_blank" rel="noopener" style="text-decoration:underline">Ouvre un ticket</a>.</p></div>
+    <div>
+      <details><summary><span class="mono">01</span>Windows affiche « Windows a protégé votre ordinateur »</summary><p>InputFREE n'est pas signé numériquement, donc SmartScreen te prévient. Clique sur « Informations complémentaires » puis « Exécuter quand même ». Si Defender met le fichier en quarantaine, restaure-le dans Sécurité Windows → Historique de protection.</p></details>
+      <details><summary><span class="mono">02</span>Pourquoi les droits administrateur ?</summary><p>Pour installer les pilotes de la manette virtuelle et partager ta souris et ton clavier USB avec le mini Linux du mode USB.</p></details>
+      <details><summary><span class="mono">03</span>Le mode USB ne démarre pas</summary><p>Il a besoin de WSL 2 et de la virtualisation du processeur (Intel VT-x ou AMD SVM) activée dans le BIOS. Redémarre ton PC si l'installation te le demande. Le mode simple fonctionne sans tout ça.</p></details>
+      <details><summary><span class="mono">04</span>Est-ce que je risque de perdre ma souris et mon clavier ?</summary><p>Non : F12 rend tout immédiatement, la première capture demande une confirmation, et si le logiciel se ferme ou plante, tout revient seul en moins de 3 secondes. Sur un PC portable, le clavier intégré reste toujours sur Windows.</p></details>
+      <details><summary><span class="mono">05</span>Est-ce autorisé dans les jeux en ligne ?</summary><p>Certains jeux interdisent les adaptateurs clavier/souris vers manette dans leurs règles. Vérifie les conditions du jeu avant de l'utiliser en ligne.</p></details>
     </div>
   </div>
-</div></section>
+</section>
 
-<section id="how"><div class="wrap">
-  <div class="eyebrow rv">Comment ça marche</div>
-  <h2 class="rv">Prêt à jouer en 3 étapes.</h2>
-  <p class="lead rv">Tous les pilotes sont inclus et s'installent en un clic depuis le logiciel.</p>
-  <div class="steps">
-    <div class="step rv"><h3>Télécharge et lance</h3><p>Un seul fichier, aucune installation compliquée. Accepte la demande administrateur de Windows.</p></div>
-    <div class="step rv"><h3>Installe les composants</h3><p>Onglet Installation → « Installer ». Redémarre si Windows le demande, puis coche ta souris et ton clavier.</p></div>
-    <div class="step rv"><h3>Appuie sur F10</h3><p>Lance ton jeu, active la manette, et joue. F10 pour la pause, F12 pour tout rendre à Windows.</p></div>
-  </div>
-
-  <div class="band rv">
-    <h2>Passe au clavier/souris.<br><span style="color:var(--acc)">Joue comme tu veux.</span></h2>
-    <p class="lead" style="margin-bottom:30px">Gratuit, sans compte, sans abonnement.</p>
-    <a class="btn btn-acc" style="padding:17px 30px;font-size:17px" href="InputFREE.exe" download="InputFREE.exe">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-      Télécharger pour Windows</a>
-    <div class="meta"><span>Windows 10 / 11 64 bits</span><span>Virtualisation activée (mode USB)</span></div>
-    <div class="hash">SHA-256 : d8a8cba1f9cb7526a8ec5b7a13b376154999b2f69091eb4ef5b0b4bf4ec6fed5</div>
-  </div>
-</div></section>
-
-<section id="faq"><div class="wrap">
-  <div class="eyebrow rv">FAQ</div>
-  <h2 class="rv">Questions fréquentes</h2>
-  <div class="faq" style="margin-top:40px">
-    <details class="rv"><summary>Windows affiche « Windows a protégé votre ordinateur »</summary><p>InputFREE n'est pas signé numériquement, donc SmartScreen te prévient. Clique sur « Informations complémentaires » puis « Exécuter quand même ». Si Defender met le fichier en quarantaine, tu peux le restaurer dans Sécurité Windows → Historique de protection.</p></details>
-    <details class="rv"><summary>Pourquoi les droits administrateur ?</summary><p>Pour installer les pilotes de la manette virtuelle et pour partager ta souris et ton clavier USB avec le mini Linux du mode USB.</p></details>
-    <details class="rv"><summary>Le mode USB ne démarre pas</summary><p>Le mode USB a besoin de WSL 2 et de la virtualisation du processeur (Intel VT-x ou AMD SVM) activée dans le BIOS. Si l'installation te le demande, redémarre ton PC. Le mode simple fonctionne sans tout ça.</p></details>
-    <details class="rv"><summary>Est-ce que je risque de perdre ma souris et mon clavier ?</summary><p>Non : F12 rend tout immédiatement, la première capture demande une confirmation, et si le logiciel se ferme ou plante, tout revient seul en moins de 3 secondes. Sur un PC portable, le clavier intégré reste toujours sur Windows.</p></details>
-    <details class="rv"><summary>Est-ce autorisé dans les jeux en ligne ?</summary><p>Certains jeux interdisent les adaptateurs clavier/souris vers manette dans leurs règles. Vérifie les conditions du jeu avant de l'utiliser en ligne.</p></details>
-  </div>
-</div></section>
-
-<footer><div class="wrap">
-  <div><div class="logo" style="margin-bottom:10px"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="#15171f"><path d="M7 6h10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.3 2.1L14.3 15H9.7l-1.4 1.6A3.5 3.5 0 0 1 2 14.5V11a5 5 0 0 1 5-5z"/></svg></i>Input<b>FREE</b></div>© 2026 InputFREE. Logiciel gratuit, non affilié à Microsoft ni à Xbox.</div>
+<footer>
+  <div><div class="fbrand"><svg viewBox="0 0 64 40" width="28" fill="#ececee"><path d="M14 2h36a12 12 0 0 1 12 12v8a10 10 0 0 1-18 6l-4-5H24l-4 5A10 10 0 0 1 2 22v-8A12 12 0 0 1 14 2z"/></svg>Input<b>FREE</b></div>© 2026 InputFREE. Logiciel gratuit, non affilié à Microsoft ni à Xbox.</div>
   <div>Composants tiers inclus, non modifiés :
     <a href="https://github.com/nefarius/ViGEmBus/tree/v1.22.0">ViGEmBus 1.22</a> (BSD-3-Clause),
     <a href="https://github.com/Ryochan7/FakerInput">FakerInput 0.1.1</a> (MIT, © 2021 Travis Nickles),
@@ -226,15 +339,36 @@ footer a{color:#c9cede;text-decoration:underline;text-decoration-color:#3a4052}
     <a href="https://dl-cdn.alpinelinux.org/alpine/v3.22/">Alpine Linux 3.22</a>.
     Graphismes de l'interface : « Controller Keyboard Mouse UI » par <a href="https://captain-moo.itch.io/controller-keyboard-mouse-ui">Captain Moo</a>.
     Xbox est une marque de Microsoft.</div>
-</div></footer>
+</footer>
+</main>
 
 <script>
+addEventListener("load",()=>setTimeout(()=>document.body.classList.add("ready"),650));
+setTimeout(()=>document.body.classList.add("ready"),2500);
+// video
 const v=document.getElementById("vid"),pl=document.getElementById("play");
-pl.onclick=()=>{v.play();};
+pl.onclick=()=>v.play();
 v.addEventListener("play",()=>pl.classList.add("hide"));
-v.addEventListener("pause",()=>{if(!v.seeking)pl.classList.remove("hide");});
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});
-document.querySelectorAll(".rv").forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+"ms";io.observe(el);});
+v.addEventListener("pause",()=>{if(!v.seeking&&!v.ended)pl.classList.remove("hide");});
+v.addEventListener("ended",()=>pl.classList.remove("hide"));
+// copy link
+document.getElementById("copy").onclick=e=>{navigator.clipboard.writeText(location.href.split("#")[0]);e.target.textContent="✓ Lien copié";setTimeout(()=>e.target.textContent="⧉ Copier le lien",1800);};
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}}),{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".rv").forEach((el,i)=>{el.style.transitionDelay=(i%3)*90+"ms";io.observe(el);});
+// rail + nav
+const secs=[...document.querySelectorAll("main section")],list=document.getElementById("seclist");
+list.innerHTML=secs.map(s=>`<div data-id="${s.id}">${s.dataset.name}</div>`).join("");
+function onScroll(){
+  const h=document.documentElement,p=h.scrollTop/(h.scrollHeight-innerHeight||1);
+  const rail=document.querySelector(".rail"),mk=document.getElementById("marker");
+  mk.style.top=(p*(rail.clientHeight-2))+"px"; document.getElementById("pct").textContent=String(Math.round(p*100)).padStart(2,"0");
+  let cur=secs[0]; for(const s of secs){ if(s.getBoundingClientRect().top<innerHeight*.45) cur=s; }
+  document.getElementById("secname").textContent=cur.dataset.name;
+  list.querySelectorAll("div").forEach(d=>d.classList.toggle("on",d.dataset.id===cur.id));
+  document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.dataset.s===cur.id||(cur.id==="principles"&&a.dataset.s==="features")));
+}
+addEventListener("scroll",onScroll,{passive:true}); onScroll();
 </script>
 </body>
 </html>
